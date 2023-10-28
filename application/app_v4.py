@@ -8,6 +8,15 @@ from flask_restx import Api, Resource
 import requests
 from dicttoxml import dicttoxml
 
+# Here's the helper method
+def fetch_variant_validator_data(genome_build, variant_description, select_transcripts):
+    # Format the URL using the given text strings
+    url = '/'.join(['http://rest.variantvalidator.org/variantvalidator', genome_build, variant_description, select_transcripts])
+    # Fetch the data from the VariantValidator API
+    validation = requests.get(url)
+    # Return the JSON content
+    return validation.json()
+
 # Define the application as a Flask app with the name defined by __name__ (i.e. the name of the current module)
 # Most tutorials define application as "app", but I have had issues with this when it comes to deployment,
 # so application is recommended
@@ -15,7 +24,6 @@ application = Flask(__name__)
 
 # Define the API as api
 api = Api(app = application)
-
 
 """
 Representations
@@ -31,7 +39,6 @@ def xml(data, code, headers):
     resp = make_response(data, code)
     resp.headers['Content-Type'] = 'text/xml'
     return resp
-
 
 # Define a name-space to be read Swagger UI which is built in to Flask-RESTX
 # The first variable is the path of the namespace the second variable describes the space
@@ -55,12 +62,7 @@ vv_space = api.namespace('VariantValidator', description='VariantValidator APIs'
 @vv_space.route("/variantvalidator/<string:genome_build>/<string:variant_description>/<string:select_transcripts>")
 class VariantValidatorClass(Resource):
     def get(self, genome_build, variant_description, select_transcripts):
-
-        # Make a request to the curent VariantValidator rest-API
-        url = '/'.join(['http://rest.variantvalidator.org/variantvalidator', genome_build, variant_description, select_transcripts])
-        validation = requests.get(url)
-        content = validation.json()
-        return content
+        return fetch_variant_validator_data(genome_build, variant_description, select_transcripts)
 
 # Allows app to be run in debug mode
 if __name__ == '__main__':
