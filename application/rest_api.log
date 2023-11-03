@@ -1,0 +1,23 @@
+2023-11-03 16:24:26,611 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:24:26,979 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:33:42,671 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:35:10,453 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:36:56,313 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:37:10,604 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:37:10,973 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:45:38,517 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:45:47,936 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:45:48,307 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:51:50,234 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:52:07,072 - rest_api - DEBUG - Name request received: Egle from 127.0.0.1
+2023-11-03 16:52:07,072 - rest_api - DEBUG - Returned XML name response for Egle to 127.0.0.1
+2023-11-03 16:53:50,155 - rest_api - DEBUG - Logging system initialized
+2023-11-03 16:54:00,641 - rest_api - DEBUG - Returned XML greeting for 127.0.0.1
+2023-11-03 17:02:23,693 - rest_api - DEBUG - Logging system initialized
+2023-11-03 17:07:39,421 - rest_api - DEBUG - Logging system initialized
+2023-11-03 17:08:09,822 - rest_api - INFO - Received request for Genome Build: GRCh37, Variant: NM_000088.3:c.589G>T, Transcripts: all from IP: 127.0.0.1
+2023-11-03 17:08:09,977 - rest_api - INFO - Successfully fetched data from https://rest.variantvalidator.org/variantvalidator/GRCh37/NM_000088.3:c.589G>T/all for variant: NM_000088.3:c.589G>T
+2023-11-03 17:08:09,977 - rest_api - DEBUG - VariantValidator response for NM_000088.3:c.589G>T: {'message': 'Requested Endpoint not found'}
+2023-11-03 17:10:14,256 - rest_api - INFO - Received request for Genome Build: GRCh37, Variant: NM_000088.3:c.589G>T, Transcripts: NM_000093.4 from IP: 127.0.0.1
+2023-11-03 17:10:14,310 - rest_api - INFO - Successfully fetched data from https://rest.variantvalidator.org/variantvalidator/GRCh37/NM_000088.3:c.589G>T/NM_000093.4 for variant: NM_000088.3:c.589G>T
+2023-11-03 17:10:14,310 - rest_api - DEBUG - VariantValidator response for NM_000088.3:c.589G>T: {'message': 'Requested Endpoint not found'}

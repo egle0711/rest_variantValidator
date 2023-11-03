@@ -1,11 +1,11 @@
 """
-Simple rest interface for VariantVlidator built using Flask Flask-RESTPlus and Swagger UI
+Simple rest interface for VariantValidator built using Flask Flask-RESTX and Swagger UI
 """
 
 # Import modules
 from flask import Flask
-from flask_restplus import Api, Resource
-import _____
+from flask_restx import Api, Resource
+import requests  # <-- Filled in the blank
 
 # Define the application as a Flask app with the name defined by __name__ (i.e. the name of the current module)
 # Most tutorials define application as "app", but I have had issues with this when it comes to deployment,
@@ -13,9 +13,9 @@ import _____
 application = Flask(__name__)
 
 # Define the API as api
-api = Api(app = application)
+api = Api(app=application)
 
-# Define a name-space to be read Swagger UI which is built in to Flask-RESTPlus
+# Define a name-space to be read Swagger UI which is built in to Flask-RESTX
 # The first variable is the path of the namespace the second variable describes the space
 hello_space = api.namespace('hello', description='Simple API that returns a greeting')
 @hello_space.route("/")
@@ -25,27 +25,30 @@ class HelloClass(Resource):
             "greeting": "Hello World"
         }
 
-
 name_space = api.namespace('name', description='Return a name provided by the user')
 @name_space.route("/<string:name>")
 class NameClass(Resource):
     def get(self, name):
         return {
-            "My name is" : name
+            "My name is": name
         }
 
 vv_space = api.namespace('VariantValidator', description='VariantValidator APIs')
-@vv_space.route("/variantvalidator/_____")
+@vv_space.route("/variantvalidator/<string:variant>/<string:type>/<string:build>")
 class VariantValidatorClass(Resource):
-    def get(self, _____):
+    def get(self, variant, type, build):  # <-- Filled in the blank
 
-        # Make a request to the curent VariantValidator rest-API
-        url = _____
-        validation = _____
-        content = _____
-        return _____
+        # Make a request to the current VariantValidator rest-API
+        url = f"https://variantvalidator.org/validator/{type}/{variant}/{build}"
+        response = requests.get(url)
+        
+        if response.status_code == 200:
+            content = response.json()
+            return content 
+        else:
+            return {"error": "Failed to validate the variant"}, 500  # Return an error if the API call fails
 
 # Allows app to be run in debug mode
 if __name__ == '__main__':
-    application.debug = True # Enable debugging mode
-    application.run(host="127.0.0.1", port=5000) # Specify a host and port fot the app
+    application.debug = True  # Enable debugging mode
+    application.run(host="127.0.0.1", port=5000)  # Specify a host and port for the app

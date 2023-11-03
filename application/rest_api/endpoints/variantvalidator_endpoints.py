@@ -1,9 +1,14 @@
-from flask_restplus import Namespace, Resource
-from . import request_parser
-from . import representations
+from flask_restx import Namespace, Resource
+from rest_api.utils import request_parser
+from rest_api.utils import representations
 import requests
-from requests.exceptions import ConnectionError
-from . import exceptions
+from rest_api.utils import exceptions
+import logging
+from flask import request
+
+
+# Get the logger
+logger = logging.getLogger('rest_api')
 
 """
 Create a parser object locally
@@ -11,7 +16,6 @@ Create a parser object locally
 parser = request_parser.parser
 
 api = Namespace('VariantValidator', description='VariantValidator API Endpoints')
-
 
 @api.route("/variantvalidator/<string:genome_build>/<string:variant_description>/<string:select_transcripts>")
 @api.param("select_transcripts", "***'all'***\n"
@@ -46,7 +50,10 @@ class VariantValidatorClass(Resource):
     @api.expect(parser, validate=True)
     def get(self, genome_build, variant_description, select_transcripts):
 
-        # Make a request to the current VariantValidator rest-API
+        # Log the request details
+        logger.info(f"Received request for Genome Build: {genome_build}, Variant: {variant_description}, Transcripts: {select_transcripts} from IP: {request.remote_addr}")
+
+        # Construct the URL for the VariantValidator rest-API
         url = '/'.join(['https://rest.variantvalidator.org/variantvalidator',
                         genome_build,
                         variant_description,
@@ -54,21 +61,21 @@ class VariantValidatorClass(Resource):
                         ])
         try:
             validation = requests.get(url)
+            # Log success in fetching data from external API
+            logger.info(f"Successfully fetched data from {url} for variant: {variant_description}")
         except ConnectionError:
-            raise exceptions.RemoteConnectionError('https://rest.variantvalidator.org/variantvalidator currently '
-                                                   'unavailable')
+            logger.error(f"Failed to connect to VariantValidator API for variant: {variant_description} from IP: {request.remote_addr}")
+            raise exceptions.RemoteConnectionError('https://rest.variantvalidator.org/variantvalidator currently unavailable')
+        
         content = validation.json()
 
-        # Collect Arguments
-        args = parser.parse_args()
+        # Log the response details
+        logger.debug(f"VariantValidator response for {variant_description}: {content}")
 
-        # Overrides the default response route so that the standard HTML URL can return any specified format
+        args = parser.parse_args()
         if args['content-type'] == 'application/json':
-            # example: http://127.0.0.1:5000.....bob?content-type=application/json
             return representations.application_json(content, 200, None)
-        # example: http://127.0.0.1:5000.....?content-type=text/xml
         elif args['content-type'] == 'text/xml':
             return representations.xml(content, 200, None)
         else:
-            # Return the api default output
             return content
